@@ -1,26 +1,31 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import actions from '../redux/contacts/contacts-actions';
+import { connect, useSelector } from 'react-redux';
+import contactOperations from '../redux/contacts/contacts-operations';
 import s from './Styles.module.scss';
+import contactsSelectors from '../redux/contacts/contacts-selectors';
 
 function ContactList({ contacts, deleteContact }) {
+  const isLoading = useSelector(contactsSelectors.getLoading);
   return (
-    <ul className={s.contactList}>
-      {contacts.map(({ id, name, number }) => (
-        <li key={id} className={s.listItem}>
-          <p>
-            {name}: {number}
-          </p>
-          <button
-            onClick={() => deleteContact(id)}
-            className={s.btn}
-            title="Удалить контакт"
-          >
-            Delete
-          </button>
-        </li>
-      ))}
-    </ul>
+    <>
+      {isLoading && <h1>Loading...</h1>}
+      <ul className={s.contactList}>
+        {contacts.map(({ id, name, number }) => (
+          <li key={id} className={s.listItem}>
+            <p>
+              {name}: {number}
+            </p>
+            <button
+              onClick={() => deleteContact(id)}
+              className={s.btn}
+              title="Удалить контакт"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -29,19 +34,12 @@ ContactList.propTypes = {
   deleteContact: PropTypes.func,
 };
 
-const getVisibleContacts = (allContacts, filter) => {
-  const normalizedFilter = filter.toLowerCase();
-  return allContacts.filter(contact =>
-    contact.name.toLowerCase().includes(normalizedFilter),
-  );
-};
-
-const mapStateToProps = ({ contacts: { items, filter } }) => ({
-  contacts: getVisibleContacts(items, filter),
+const mapStateToProps = state => ({
+  contacts: contactsSelectors.getVisibleContacts(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  deleteContact: id => dispatch(actions.deleteContact(id)),
+  deleteContact: id => dispatch(contactOperations.deleteContact(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
