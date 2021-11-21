@@ -8,10 +8,6 @@ const items = createReducer([], {
     ...state,
     payload,
   ],
-  // (state, { payload }) =>
-  //   state.find(e => e.name.toLowerCase() === payload.name.toLowerCase())
-  //     ? alert(`${payload.name} is already in contacts`)
-  //     : [...state, payload],
   [operations.deleteContact.fulfilled]: (state, { payload }) =>
     state.filter(contact => contact.id !== payload),
 });
