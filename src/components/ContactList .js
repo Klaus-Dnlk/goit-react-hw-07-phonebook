@@ -23,6 +23,7 @@ export default function ContactList() {
                 {name}: {number}
               </p>
               <button
+                type="button"
                 onClick={() => dispatch(contactsOperations.deleteContact(id))}
                 className={s.btn}
                 title="Удалить контакт"

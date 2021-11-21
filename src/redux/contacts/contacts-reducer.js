@@ -4,12 +4,16 @@ import operations from './contacts-operations';
 
 const items = createReducer([], {
   [operations.fetchContacts.fulfilled]: (_, { payload }) => payload,
-  [operations.addNewContact.fulfilled]: (state, { payload }) =>
-    state.find(e => e.name.toLowerCase() === payload.name.toLowerCase())
-      ? alert(`${payload.name} is already in contacts`)
-      : [...state, payload],
+  [operations.addNewContact.fulfilled]: (state, { payload }) => [
+    ...state,
+    payload,
+  ],
+  // (state, { payload }) =>
+  //   state.find(e => e.name.toLowerCase() === payload.name.toLowerCase())
+  //     ? alert(`${payload.name} is already in contacts`)
+  //     : [...state, payload],
   [operations.deleteContact.fulfilled]: (state, { payload }) =>
-    state.filter(({ id }) => id !== payload),
+    state.filter(contact => contact.id !== payload),
 });
 
 const loading = createReducer(false, {
@@ -19,9 +23,9 @@ const loading = createReducer(false, {
   [operations.addNewContact.pending]: () => true,
   [operations.addNewContact.fulfilled]: () => false,
   [operations.addNewContact.rejected]: () => false,
-  [operations.deletelContact.pending]: () => true,
-  [operations.deletelContact.fulfilled]: () => false,
-  [operations.deletelContact.rejected]: () => false,
+  [operations.deleteContact.pending]: () => true,
+  [operations.deleteContact.fulfilled]: () => false,
+  [operations.deleteContact.rejected]: () => false,
 });
 
 const filter = createReducer('', {
