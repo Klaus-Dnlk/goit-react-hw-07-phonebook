@@ -9,7 +9,7 @@ export default function ContactList() {
   const isLoading = useSelector(contactsSelectors.getLoading);
 
   useEffect(() => {
-    dispatch(contactsOperations.fetchContacts);
+    dispatch(contactsOperations.fetchContacts());
   }, [dispatch]);
 
   return (
@@ -17,10 +17,10 @@ export default function ContactList() {
       {isLoading && <h1>Loading...</h1>}
       {contacts.length > 0 && (
         <ul className={s.contactList}>
-          {contacts.map(({ id, name, number }) => (
+          {contacts.map(({ id, name, phone }) => (
             <li key={id} className={s.listItem}>
               <p>
-                {name}: {number}
+                {name}: {phone}
               </p>
               <button
                 type="button"

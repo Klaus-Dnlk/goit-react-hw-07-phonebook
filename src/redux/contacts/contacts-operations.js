@@ -17,9 +17,9 @@ export const fetchContacts = createAsyncThunk(
 
 const addNewContact = createAsyncThunk(
   'contacts/addNewContact',
-  async ({ name, number }, { rejectWithValue }) => {
+  async ({ name, phone }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post('/contacts', { name, number });
+      const { data } = await axios.post('/contacts', { name, phone });
       return data;
     } catch (error) {
       rejectWithValue(error);
@@ -39,6 +39,7 @@ const deleteContact = createAsyncThunk(
   },
 );
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   fetchContacts,
   addNewContact,
