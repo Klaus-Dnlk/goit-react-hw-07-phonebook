@@ -1,5 +1,5 @@
 import { createReducer, combineReducers } from '@reduxjs/toolkit';
-import actions from './contacts-actions';
+import changeFilter from './contacts-actions';
 import operations from './contacts-operations';
 
 const items = createReducer([], {
@@ -25,7 +25,7 @@ const loading = createReducer(false, {
 });
 
 const filter = createReducer('', {
-  [actions.changeFilter]: (_, { payload }) => payload,
+  [changeFilter]: (_, { payload }) => payload,
 });
 
 const error = createReducer(null, {});
