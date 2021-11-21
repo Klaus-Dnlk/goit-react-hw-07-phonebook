@@ -1,10 +1,10 @@
-const getLoading = state => state.contacts.loading;
+export const getLoading = state => state.contacts.loading;
 
-const getFilter = state => state.contacts.filter;
+export const getFilter = state => state.contacts.filter;
 
-const getAllContacts = state => state.contacts.items;
+export const getAllContacts = state => state.contacts.items;
 
-const getVisibleContacts = state => {
+export const getVisibleContacts = state => {
   const allContacts = getAllContacts(state);
   const filter = getFilter(state);
   const normalizedFilter = filter.toLowerCase();
@@ -12,10 +12,4 @@ const getVisibleContacts = state => {
   return allContacts.filter(contact =>
     contact.name.toLowerCase().includes(normalizedFilter),
   );
-};
-
-export default {
-  getLoading,
-  getFilter,
-  getVisibleContacts,
 };

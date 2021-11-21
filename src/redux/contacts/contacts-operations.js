@@ -1,49 +1,43 @@
 import axios from 'axios';
-import {
-  addContactRequest,
-  addContactSuccess,
-  addContactError,
-  delContactRequest,
-  delContactSuccess,
-  delContactError,
-  fetchContactRequest,
-  fetchContactSuccess,
-  fetchContactError,
-} from './contacts-actions';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
 axios.defaults.baseURL = 'http://localhost:4040';
 
-const fetchContacts = () => dispatch => {
-  dispatch(fetchContactRequest());
+export const fetchContacts = createAsyncThunk(
+  'contacts/fetchContacts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const contacts = await axios.get('/contacts');
+      return contacts;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
 
-  axios
-    .get('/contacts')
-    .then(({ data }) => dispatch(fetchContactSuccess(data)))
-    .catch(error => dispatch(fetchContactError(error)));
-};
+const addNewContact = createAsyncThunk(
+  'contacts/addNewContact',
+  async ({ name, number }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post('/contacts', { name, number });
+      return data;
+    } catch (error) {
+      rejectWithValue(error);
+    }
+  },
+);
 
-const addNewContact = text => dispatch => {
-  const contact = {
-    text,
-    completed: false,
-  };
-
-  dispatch(addContactRequest());
-
-  axios
-    .post('/contacts', contact)
-    .then(({ data }) => dispatch(addContactSuccess(data)))
-    .catch(error => dispatch(addContactError(error)));
-};
-
-const deleteContact = contactId => dispatch => {
-  dispatch(delContactRequest());
-
-  axios
-    .delete(`/contacts/${contactId}`)
-    .then(() => dispatch(delContactSuccess(contactId)))
-    .catch(error => dispatch(delContactError(error)));
-};
+const deleteContact = createAsyncThunk(
+  'contacts/delContact',
+  async (contactId, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.delete(`/contacts/${contactId}`);
+      return data.id;
+    } catch (error) {
+      rejectWithValue(error);
+    }
+  },
+);
 
 export default {
   fetchContacts,

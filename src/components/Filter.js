@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import * as contactsActions from '../redux/contacts/contacts-actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { contactsSelectors, changeFilter } from '../redux/contacts';
 import { v4 as uuidv4 } from 'uuid';
 import s from './Styles.module.scss';
-import contactsSelectors from '../redux/contacts/contacts-selectors';
 
 const filterId = uuidv4();
 
-function Filter({ value, onChange }) {
+export default function Filter() {
+  const value = useSelector(contactsSelectors.getFilter);
+  const dispatch = useDispatch();
   return (
     <div className={s.filterBox}>
       <label htmlFor={filterId} className={s.filterLabel}>
@@ -17,24 +17,9 @@ function Filter({ value, onChange }) {
           id={filterId}
           placeholder="Find contacts by name"
           value={value}
-          onChange={onChange}
+          onChange={e => dispatch(changeFilter(e.target.value))}
         ></input>
       </label>
     </div>
   );
 }
-
-Filter.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-};
-
-const mapStateToProps = state => ({
-  value: contactsSelectors.getFilter(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  onChange: e => dispatch(contactsActions.changeFilter(e.target.value)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Filter);
